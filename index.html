@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>全体協議テーマ ルーレット＆解説</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f2f9f3;--ink:#173b2a;--sub:#4d6b5b;--green:#1f8f55;--green-d:#13683c;--line:#cfe5d6}
+*{box-sizing:border-box}
+html{font-size:min(1.6vh,0.95vw)}
+body{margin:0;height:100vh;overflow:hidden;background:var(--bg);color:var(--ink);
+  font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Meiryo",sans-serif;display:flex;flex-direction:column}
+button{font-family:inherit;cursor:pointer}
+header{display:flex;align-items:center;gap:1.4rem;padding:1rem 2rem;background:var(--green);color:#fff;box-shadow:0 .3rem 1rem rgba(0,60,30,.18)}
+header h1{font-size:2.3rem;margin:0;font-weight:800;white-space:nowrap}
+#status{flex:1;min-width:0;font-size:1.9rem;font-weight:800;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#status .num{display:inline-block;background:#fff;color:var(--green-d);border-radius:1rem;padding:0 .8rem;margin:0 .3rem}
+.tools{display:flex;gap:.6rem}
+.tbtn{background:rgba(255,255,255,.16);color:#fff;border:2px solid rgba(255,255,255,.45);border-radius:2rem;padding:.45rem 1rem;font-size:1.15rem;font-weight:700;white-space:nowrap}
+.tbtn:hover{background:rgba(255,255,255,.28)}
+.tbtn.on{background:#fff;color:var(--green-d);border-color:#fff}
+.tbtn.warn{background:#ffdf6b;color:#5a4200;border-color:#ffdf6b}
+main{flex:1;display:grid;grid-template-columns:46% 54%;min-height:0}
+#left{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem 1rem 1.5rem 2rem;min-height:0}
+#wheelWrap{position:relative;flex:1;width:100%;min-height:0;display:flex;align-items:center;justify-content:center}
+#wheel{display:block;filter:drop-shadow(0 1.2rem 1.6rem rgba(10,70,40,.22))}
+#pointer{position:absolute;left:50%;top:0;transform:translateX(-50%);width:0;height:0;border-left:2.2rem solid transparent;border-right:2.2rem solid transparent;border-top:4.4rem solid #e2412f;filter:drop-shadow(0 .3rem .3rem rgba(0,0,0,.3));transform-origin:50% 0;z-index:2}
+#pointer.wig{animation:wig .12s ease-out}
+@keyframes wig{0%{transform:translateX(-50%) rotate(-14deg)}100%{transform:translateX(-50%) rotate(0)}}
+#spinBtn{margin-top:1.2rem;font-size:2.4rem;font-weight:800;color:#fff;border:none;border-radius:4rem;padding:1rem 3.6rem;background:linear-gradient(180deg,#ff8a3d,#e8542a);box-shadow:0 .5rem 0 #b33a17,0 1rem 1.6rem rgba(0,0,0,.18)}
+#spinBtn:active{transform:translateY(.4rem);box-shadow:0 .1rem 0 #b33a17}
+#spinBtn:disabled{filter:grayscale(.7) opacity(.6);cursor:default}
+#spinBtn .key{font-size:1.2rem;opacity:.85;margin-left:.6rem}
+#remain{margin-top:.8rem;font-size:1.3rem;color:var(--sub);font-weight:700}
+
+#right{padding:1.6rem 2rem 1.6rem 1rem;display:flex;flex-direction:column;gap:.9rem;min-height:0}
+#right h2{margin:0;font-size:1.7rem;color:var(--sub)}
+#list{flex:1;display:flex;flex-direction:column;gap:.8rem;min-height:0}
+.ti{flex:1;display:flex;align-items:center;gap:1.2rem;background:#fff;border:.25rem solid var(--line);border-radius:1.2rem;padding:.4rem 1.2rem;min-height:0;transition:transform .2s}
+.ti .badge{min-width:5.4rem;height:5.4rem;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.4rem;font-weight:800;color:#fff;flex:0 0 auto}
+.ti .tx{flex:1;min-width:0}
+.ti .tx b{display:block;font-size:2rem;line-height:1.25;white-space:nowrap;overflow:hidden}
+.ti .tx small{display:block;font-size:1.25rem;color:var(--sub);line-height:1.35;margin-top:.15rem}
+.ti .open{font-size:1.3rem;font-weight:800;border:none;border-radius:2rem;padding:.5rem 1.2rem;color:#fff;white-space:nowrap}
+.ti.wait .badge{background:#d8e8dd!important;color:#8fb09b}
+.ti.wait .open{visibility:hidden}
+.ti.done{cursor:pointer}
+.ti.done:hover{transform:translateX(-.3rem)}
+.ti.last{box-shadow:0 0 0 .35rem rgba(255,138,61,.4)}
+
+.ov{position:fixed;inset:0;background:rgba(8,35,22,.72);display:flex;align-items:center;justify-content:center;z-index:20;backdrop-filter:blur(3px)}
+.ov.hidden{display:none}
+.reveal{width:min(80vw,140rem);text-align:center;color:#fff}
+#ovLead{font-size:3.6rem;font-weight:800;margin-bottom:2rem;animation:fadein .5s}
+#ovLead .gn{display:inline-block;background:#ff8a3d;border-radius:1.2rem;padding:0 1.4rem;margin-right:.6rem}
+@keyframes fadein{from{opacity:0;transform:translateY(1rem)}}
+.tcard{background:#fff;color:var(--ink);border-radius:2rem;overflow:hidden;text-align:left;box-shadow:0 2rem 4rem rgba(0,0,0,.35);animation:zoom .7s cubic-bezier(.2,1.5,.4,1)}
+@keyframes zoom{0%{transform:scale(.3) rotate(-6deg);opacity:0}100%{transform:scale(1);opacity:1}}
+.tcard .top{padding:2.2rem 3rem;color:#fff}
+.tcard .tt{font-size:4.4rem;font-weight:800;line-height:1.2;white-space:nowrap}
+.tcard .body{padding:2.2rem 3rem 2.6rem}
+.tcard .q{font-size:2.8rem;font-weight:800;line-height:1.45}
+.btns{margin-top:2.2rem;display:flex;gap:1.4rem;justify-content:center}
+.btns.hide{visibility:hidden}
+.btns button{font-size:2.2rem;font-weight:800;border:none;border-radius:3rem;padding:.9rem 3rem}
+.b-main{background:#ff8a3d;color:#fff;box-shadow:0 .5rem 0 #b9561d}
+.b-sub{background:#fff;color:var(--green-d);box-shadow:0 .5rem 0 #9fc9ad}
+
+/* explanation */
+#ex{position:fixed;inset:0;background:var(--bg);z-index:25;display:flex;flex-direction:column}
+#ex.hidden{display:none}
+#exHead{display:flex;align-items:center;gap:1.6rem;padding:1.4rem 2.4rem;color:#fff}
+#exHead .lbl{font-size:1.5rem;font-weight:800;background:rgba(255,255,255,.25);border-radius:1rem;padding:.3rem 1rem;white-space:nowrap}
+#exHead .t{flex:1;font-size:3rem;font-weight:800;line-height:1.2}
+#exHead button{font-size:1.4rem;font-weight:800;border:2px solid rgba(255,255,255,.7);background:transparent;color:#fff;border-radius:2rem;padding:.5rem 1.3rem;white-space:nowrap}
+#tabs{display:flex;gap:.8rem;padding:1.2rem 2.4rem 0}
+#tabs button{flex:1;font-size:1.7rem;font-weight:800;border:none;border-radius:1.2rem 1.2rem 0 0;padding:.9rem;background:#dfece3;color:var(--sub)}
+#tabs button.on{background:#fff;color:var(--ink)}
+#tabs button span{display:inline-block;width:2.4rem;height:2.4rem;line-height:2.4rem;border-radius:50%;background:#fff;margin-right:.6rem;font-size:1.4rem}
+#tabs button.on span{color:#fff}
+#panel{flex:1;margin:0 2.4rem;background:#fff;border-radius:0 0 1.6rem 1.6rem;padding:2rem 3rem;overflow:hidden;min-height:0;display:flex;flex-direction:column;justify-content:center;animation:fadein .35s}
+#inner{width:100%}
+#exFoot{display:flex;justify-content:space-between;align-items:center;padding:1rem 2.4rem}
+#exFoot button{font-size:1.7rem;font-weight:800;border:none;border-radius:2rem;padding:.7rem 2.2rem;background:#fff;color:var(--green-d);box-shadow:0 .3rem 0 #b7d6c1}
+#exFoot button:disabled{opacity:.35;cursor:default}
+#exFoot .hint{font-size:1.3rem;color:var(--sub)}
+.p-q{font-size:1.15em;font-weight:800;line-height:1.4;padding:.6em .9em;border-radius:.5em;margin-bottom:.8em}
+.ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.6em}
+.ul li{font-size:1em;line-height:1.5;padding-left:1.2em;position:relative}
+.ul li::before{content:"";position:absolute;left:.15em;top:.5em;width:.5em;height:.5em;border-radius:50%;background:var(--c)}
+.qs{display:flex;flex-direction:column;gap:.55em}
+.qc{border-left:.35em solid var(--c);background:#f6faf7;border-radius:.45em;padding:.5em .8em}
+.qc .src{font-size:.68em;font-weight:800;color:var(--c);margin-bottom:.15em}
+.qc .txt{font-size:.95em;line-height:1.5}
+.talk{display:flex;flex-direction:column;align-items:center;justify-content:center}
+.talk div{text-wrap:balance;font-size:1.3em;font-weight:800;line-height:1.5;border:.12em dashed var(--c);border-radius:.6em;padding:1em 1.2em;text-align:center;width:100%}
+.talk div::before{content:"Q. ";color:var(--c)}
+.note{font-size:.55em;color:var(--sub);margin-top:1em}
+
+.sum{background:#fff;color:var(--ink);border-radius:2rem;padding:2.2rem 2.6rem;width:min(90vw,140rem);max-height:92vh;overflow:auto;animation:zoom .5s cubic-bezier(.2,1.4,.4,1)}
+.sum h2{margin:0 0 1.4rem;font-size:3rem;text-align:center}
+.sum .it{display:flex;gap:1.2rem;align-items:center;border-radius:1rem;background:#f4f9f5;margin-bottom:.8rem;overflow:hidden}
+.sum .it .n{color:#fff;font-size:2rem;font-weight:800;min-width:7rem;align-self:stretch;display:flex;align-items:center;justify-content:center}
+.sum .it b{font-size:1.9rem;padding:.8rem 0}
+.sum .foot{text-align:center;margin-top:1.4rem}
+.sum .foot button{font-size:1.6rem;font-weight:800;border:none;border-radius:2rem;padding:.6rem 2.6rem;background:var(--green);color:#fff}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:30}
+</style>
+</head>
+<body>
+<header>
+  <h1>🎡 全体協議テーマ</h1>
+  <div id="status"></div>
+  <div class="tools">
+    <button class="tbtn on" id="soundBtn">音あり</button>
+    <button class="tbtn" id="listBtn">決まった順</button>
+    <button class="tbtn" id="undoBtn">1つ戻す</button>
+    <button class="tbtn" id="resetBtn">リセット</button>
+    <button class="tbtn" id="fsBtn">全画面</button>
+  </div>
+</header>
+<main>
+  <section id="left">
+    <div id="wheelWrap"><div id="pointer"></div><canvas id="wheel"></canvas></div>
+    <button id="spinBtn">ルーレットを回す<span class="key">［スペース］</span></button>
+    <div id="remain"></div>
+  </section>
+  <section id="right">
+    <h2>テーマ一覧（決まったテーマはクリックで解説を表示）</h2>
+    <div id="list"></div>
+  </section>
+</main>
+
+<div class="ov hidden" id="ov">
+  <div class="reveal">
+    <div id="ovLead"></div>
+    <div id="ovCard"></div>
+    <div class="btns hide" id="ovBtns"><button class="b-main" id="toEx">解説を見る ▶</button><button class="b-sub" id="ovClose">ルーレットに戻る</button></div>
+  </div>
+</div>
+
+<div id="ex" class="hidden">
+  <div id="exHead"><div class="lbl" id="exLbl"></div><div class="t" id="exTitle"></div><button id="exBack">ルーレットに戻る</button></div>
+  <div id="tabs"></div>
+  <div id="panel"></div>
+  <div id="exFoot"><button id="prevB">◀ 前へ</button><div class="hint">← → キーでも移動できます</div><button id="nextB">次へ ▶</button></div>
+</div>
+
+<div class="ov hidden" id="sumOv"><div class="sum" id="sumBox"></div></div>
+<canvas id="confetti"></canvas>
+
+<script>
+const PLAN="玉川小 2年2部 指導案";
+const THEMES=[
+{no:1,short:"AIと子どもの役割分担",title:"AIに任せたこと、子どもが決めたこと",color:"#1f9a58",
+ q:"この単元で、AIは何を引き受け、子どもは何を判断していたか。その分け方は妥当だったか。",
+ lesson:["AIが担ったのは、すてきカードの事前分類と、カードの文章からのキーワード化・選択肢化（指導案「生成AI活用①②」）。",
+  "子どもが担ったのは、すてきカードを書く、担当を選ぶ、金のすてきカードを決める、班で歌詞を作ること。",
+  "第3時は、子どもが自分の書いたカードをプリントして手元に置き、自分の思いを大切にしながら考えられるようにしている。"],
+ quotes:[{src:"審議まとめ p.139（国語・ICTの活用等）",text:"「児童生徒自身が行うべき思考・判断・表現の過程が生成AIに代替されないよう特段の留意をする必要がある。」"},
+  {src:"総則・評価特別部会 取りまとめ p.51",text:"情報技術の活用が「外化」を欠いて行われた場合、「空疎な情報の集積・共有となる恐れもある（例：言語による外化なしに生成AIが生成したものをそのまま使うなど）」"},
+  {src:"審議まとめ p.313（道徳・AIをめぐる問いの例）",text:"「学習課題や作品づくりに取り組む上で、何のために、どこまでAIを活用するべきか」"}],
+ points:["線引きの目安は、その単元で育てたい力に直結する「思考・判断・表現」をAIに渡さないこと。本単元では、相手を思って言葉を選び、歌にする部分がそれに当たる。",
+  "AIが担ったのは「整理」。元になった言葉は、子どもが体験から書いたものだった。",
+  "研究協議の柱2「本単元におけるAIの活用場面は適切であったか」に直結するテーマ。"],
+ talk:["作詞までAIに任せていたら、何が失われていたか？"]},
+{no:2,short:"体験の言葉とAIの言葉",title:"体験から生まれた言葉と、AIが整理した言葉",color:"#1694a3",
+ q:"AIが抜き出したキーワードは、子どもにとって「自分の言葉」になっていたか。",
+ lesson:["すてきカードは、2年間の写真を見たり学校を回ったりした体験から書いた言葉。",
+  "AIが「わくわく」「なかよし」などのキーワードを生成し、子どもは手元で並べ替えながら試行錯誤した（作詞の補助）。",
+  "本時は「せーの」で金のすてきカードを見せ合い、選んだ理由を伝え合う。ふり返りでは「なぜその言葉を選んだのか」を語る。"],
+ quotes:[{src:"審議まとめ p.8",text:"「『確かな知識』とは、こうした過程による認知的な努力を通じて身体化（記号接地）された知識でもある。」"},
+  {src:"総則・評価特別部会 取りまとめ p.50（言語能力）",text:"「言語による情報は、字面が同じであれば誰にでも同じように理解・表現されるわけではなく、人間による認知の過程で初めて意味が形成されるもの」"},
+  {src:"生活・総合WG 取りまとめ（案）p.6",text:"目標の柱書の「具体的な活動や体験」を「身体性を伴う体験と多様な表現活動」と改め、体験を通した内化と表現による外化とが往還することを明確にする。"}],
+ points:["同じ「だいじょうぶ」でも、「入学前は不安だった」という自分の記憶と結び付いたとき、その子の言葉になる（記号接地）。",
+  "AIの言葉はあくまで「選択肢」。体験に照らして選び直すことで、子どもの言葉になる。",
+  "理由を語る場面（外化）が、言葉を体験に結び付け直す仕掛けになっている。"],
+ talk:["キーワードが「自分の言葉」になったと分かる子どもの姿は、どんな姿か？"]},
+{no:3,short:"AI年長さんと本物の交流",title:"AI年長さんと、本物の交流",color:"#3a72d8",
+ q:"AI年長さんは、相手意識を育てる助けになったか。本物の年長さんのイメージを置き換えてしまう危険はないか。",
+ lesson:["保育園の先生から聞いた園児の様子をプロンプトに入れ、性格の異なる3人のAI年長さん（①前向き・入学が楽しみ　②不安・心配事がたくさん　③こだわり・興味津々）を準備した。",
+  "同じ園の年長さんとは既に2回交流している。指導案では「実際の交流が物理的に難しい中で」の補助と位置付けている。",
+  "単元のゴールは、本物の年長さんとの交流会で歌を届けること。"],
+ quotes:[{src:"生活・総合WG 取りまとめ（案）p.12（ICT活用）",text:"「生活科におけるICT活用は、身体性を伴う体験をより一層豊かにしていくものであり、直接体験を代替するものではない」"},
+  {src:"学習指導要領解説 生活編 p.72",text:"「低学年の児童は，実際に触れ合い，一緒に活動を行う中でこそ，相手意識も生まれ一緒に活動することのよさに気付いていく」"},
+  {src:"生活・総合WG 取りまとめ（案）p.6（本質的意義①身体性）",text:"「AIを含む仮想空間における情報の受容ではない、『身体で身近な生活を捉える』体験や活動を、自分の外に広がる世界との確かな接点をもつ出発点とする。」"}],
+ points:["2回の交流があるからこそ、AIの返事を「年長さんならこう言いそう」と自分の体験で受け止められる。",
+  "性格の違う3人を用意したことで、「年長さんにもいろいろな思いがある」と想像を広げる工夫になっている。",
+  "交流したことのない相手をAIで「作る」場合は、本物のイメージを置き換えてしまわないか注意が必要。"],
+ talk:["AI年長さんは、どんな条件なら効果的で、どんな条件なら避けるべきか？"]},
+{no:4,short:"先生が間に入る意味",title:"先生が間に入る使い方の意味",color:"#7a58d6",
+ q:"子どもが自分でAIを操作しなくても、情報活用能力は育つのか。",
+ lesson:["AIの分類やキーワードは、教師が事前に準備して子どもに示した。",
+  "第3時は、AIの分類をたたき台として、子どもの疑問や気付きを問い返したり、それぞれの考えを取り入れて再考したりする。",
+  "子どもは「給食のことを書いた人がいっぱい」と全体の傾向をつかみ、「年長さんが楽しみになるのは？」と目的で選んだ。"],
+ quotes:[{src:"審議まとめ p.250（小学校低学年における情報活用能力）",text:"「小学校低学年においては、デジタルに体験的に慣れ親しむことを重視し、各教科等の学習を通じて、情報活用能力の基礎を育成することが重要。」"},
+  {src:"審議まとめ p.250",text:"「『②適切な取扱い』及び『③特性の理解』についても、『基本的な操作』を学ぶ過程と一体的に育成することが重要である。」"},
+  {src:"学習指導要領解説 生活編 p.71",text:"「発達段階的に情報機器の操作に戸惑う児童も多いことが予測される。そうした児童の発達の段階や特性を十分配慮して，計画的に情報機器を取り入れることが重要である。」"}],
+ points:["情報活用能力の三要素（①活用・②適切な取扱い・③特性の理解）で見ると、本単元では①「傾向をつかみ、目的で選ぶ」、②「教師が仲立ち」、③「AIの分類をたたき台にする」に触れている。",
+  "子どもが操作しなくても、AIの出力に触れ、それを問い直して自分で判断する経験はできる。",
+  "教師の問い返しが「AIの答えをそのまま信じない」経験をつくっている。"],
+ talk:["問い返しの言葉として、効果的だったものはどれか？"]},
+{no:5,short:"低学年から高学年へ",title:"低学年から高学年へのつながり",color:"#d6497f",
+ q:"「AIの答えを正解にしない」構えを、低学年でどこまで、どんな形で育てるか。",
+ lesson:["2年生（本単元）：AIの整理を手がかりに、自分の体験で選び直す。",
+  "玉川小の4〜6年の実践：6年「AIって、どうなの？」（特性と限界を体験的に理解）、5年「お米プロジェクト」（三つのAIの案を比べて選ぶ）、4年「季節の献立を考えよう」（条件付きでAIが出した10案を吟味）。",
+  "どの学年でも「判断の主体は子ども」を大切にしている。"],
+ quotes:[{src:"審議まとめ p.139（国語・ICTの活用等）",text:"生成AIを含むICTは「生成された出力も比較・吟味の対象であることや、自ら考え、判断し、表現した内容を自らの言葉で説明し責任を持つことを基本に据える必要がある。」"},
+  {src:"生活・総合WG 取りまとめ（案）p.12",text:"ICT活用を「幼児教育から総合的な学習の時間へと連なる学習の質の高まりを促進する学習基盤として位置付ける。」"},
+  {src:"総則・評価特別部会 取りまとめ p.53（補足イメージ⑲・小学校）",text:"「情報やデータを整理し傾向を把握する方法を身に付ける」「目的に応じた表現技能を身に付ける」"}],
+ points:["共通の芯は「AIの出力は比較・吟味の対象」「判断して説明するのは自分」。",
+  "低学年はそれを「体験」として味わい、高学年では「理由を付けて」吟味する、という深まりが描ける。",
+  "WGは中学年以降への接続でも、体験で得た気付きや実感が学びの基盤になることを重視している（p.10）。"],
+ talk:["各学年で「ここまでできればよい」を一言で言うと？"]},
+{no:6,short:"AIで生まれた時間",title:"AIで生まれた時間をどう使うか",color:"#e57a2c",
+ q:"分類作業をAIに任せて生まれた時間は、何に使われていたか。他の単元ならどう使えるか。",
+ lesson:["指導案は、すてきカードの事前分類をAIに委ねることで「教師の事務的負担を減らしつつ」、子どもが「どれを担当するか」を主体的に考え、選択・判断する時間を十分に保障するとしている。",
+  "本時は、班で金のすてきカードを見せ合い、模造紙の上で歌いながら歌詞を作る時間が中心になっている。"],
+ quotes:[{src:"審議まとめ p.7",text:"「教師と子供の双方に教育課程上の『余白』を創出することで、多様な子供たちの実態に応じた教師の創意工夫の余地を拡充したり…」（余白＝「多様な子供たちの深い学びを実現するための時間的余裕」）"},
+  {src:"生活・総合WG 取りまとめ（案）p.12（ICT活用）",text:"ICT活用を「生活科の本質的意義をより深化させ、体験・認識・表現の質を高めるための補助・促進する手段と位置付ける。」"},
+  {src:"総則・評価特別部会 取りまとめ p.51（情報活用能力）",text:"情報技術を活用すれば「人間の思考やコミュニケーション、身体活動等を強化・拡張し、探究的な学びや課題解決に繋げていくことが可能。」"}],
+ points:["短縮した時間を「子どもが選ぶ・伝え合う・歌う」時間に回したことが、本単元の肝。",
+  "時間を生むこと自体が目的ではない。生まれた時間を何に使うかを、単元を設計する段階で決めておくことが大切。",
+  "教師にとっても、見取りや問い返しに使える時間になる。"],
+ talk:["自分の単元で、AIに任せて生まれた時間を何に使いたいか？"]},
+{no:7,short:"安全と配慮",title:"低学年でAIを使うときの安全と配慮",color:"#c99a0e",
+ q:"子どもの書いた言葉や園児の様子をAIに入れるとき、どんな配慮が必要か。保護者や園にはどう説明するか。",
+ lesson:["子どもが書いたすてきカードの内容をAIで分類・キーワード化している。",
+  "保育園の先生から聞いた園児の様子をプロンプトに入れて、AI年長さんを作っている。"],
+ quotes:[{src:"審議まとめ p.249",text:"「②適切な取扱い」は「情報モラル、情報セキュリティ、個人情報・著作権、メディアリテラシー、AIの適切な利用など、安全かつ責任ある情報活用を支える内容」"},
+  {src:"審議まとめ p.250（小学校低学年）",text:"「ID・パスワードを適切に管理すること、正しい姿勢で情報端末を使用すること、許可なく他者の写真や動画を撮影しないことなどを、各教科等における体験的な活動の中で学ぶ」"},
+  {src:"総則・評価特別部会 取りまとめ p.53（補足イメージ⑲・小学校）",text:"「自他の権利やルール、マナー、セキュリティを理解する」"},
+  {src:"審議まとめ p.261",text:"「初等中等教育段階における生成AIの利活用に関するガイドライン」を「学習指導要領の改訂を待たず、令和８年度中に改定する」"}],
+ points:["入力する情報（子どもの名前、園児が特定できる情報など）を事前に確かめ、必要のない情報は入れない。",
+  "保護者や園には「何を、何のためにAIに入れるのか」を説明できるようにしておく。",
+  "低学年では「許可なく撮らない」と同じように、情報の扱い方を体験的な活動の中で学ばせる視点がある。"],
+ talk:["子どもには、AIのことをどのように説明するか？"]}
+];
+const TABS=[{k:"lesson",n:"この授業では"},{k:"quotes",n:"資料では"},{k:"points",n:"解説のポイント"},{k:"talk",n:"話し合ってみよう"}];
+const KEY="theme-roulette-all-v1";
+let state={order:[]};
+try{const s=JSON.parse(localStorage.getItem(KEY)||"null");if(s&&Array.isArray(s.order))state=s;}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}};
+let opts={sound:true},spinning=false,rot=0,overlayOpen=false,pending=null,exTheme=null,exStep=0;
+const $=id=>document.getElementById(id);
+const themeBy=n=>THEMES.find(t=>t.no===n);
+const remaining=()=>THEMES.filter(t=>!state.order.includes(t.no));
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+
+/* sound */
+let actx=null;
+function audio(){if(!opts.sound)return null;try{if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();if(actx.state==="suspended")actx.resume();}catch(e){actx=null}return actx;}
+function beep(f,d,type="square",v=.12,w=0){const a=audio();if(!a)return;const t=a.currentTime+w,o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g).connect(a.destination);o.start(t);o.stop(t+d+.02);}
+const tick=()=>beep(1500,.035,"square",.07);
+function fanfare(){[[523,0],[659,.12],[784,.24],[1047,.4]].forEach(([f,w])=>beep(f,.35,"triangle",.18,w));[523,659,784,1047].forEach(f=>beep(f,1.1,"triangle",.09,.62));}
+
+/* wheel */
+const cv=$("wheel"),cx=cv.getContext("2d");let S=600,dpr=1;
+function sizeWheel(){const w=$("wheelWrap");dpr=window.devicePixelRatio||1;S=Math.max(200,Math.min(w.clientWidth,w.clientHeight)-10);cv.style.width=S+"px";cv.style.height=S+"px";cv.width=S*dpr;cv.height=S*dpr;$("pointer").style.top=(w.clientHeight-S)/2-8+"px";draw();}
+const F=s=>`800 ${s}px "M PLUS Rounded 1c",sans-serif`;
+function draw(){
+  const rem=remaining(),W=S*dpr,c=W/2,R=c-14*dpr;cx.clearRect(0,0,W,W);
+  cx.beginPath();cx.arc(c,c,R+10*dpr,0,Math.PI*2);cx.fillStyle="#173b2a";cx.fill();
+  if(!rem.length){cx.beginPath();cx.arc(c,c,R,0,Math.PI*2);cx.fillStyle="#e7f3ea";cx.fill();cx.fillStyle="#1f8f55";cx.font=F(R*.14);cx.textAlign="center";cx.textBaseline="middle";cx.fillText("全テーマ終了！",c,c);return;}
+  const n=rem.length,w=Math.PI*2/n;
+  rem.forEach((t,i)=>{const a0=rot+i*w;cx.beginPath();cx.moveTo(c,c);cx.arc(c,c,R,a0,a0+w);cx.closePath();cx.fillStyle=t.color;cx.fill();cx.lineWidth=4*dpr;cx.strokeStyle="#fff";cx.stroke();
+    const mid=a0+w/2,flip=Math.cos(mid)<0,sg=flip?-1:1;cx.save();cx.translate(c,c);cx.rotate(flip?mid+Math.PI:mid);
+    cx.fillStyle="#fff";cx.textBaseline="middle";cx.textAlign=flip?"left":"right";
+    let fs=R*.08;cx.font=F(fs);const maxW=R*.66,mw=cx.measureText(t.short).width;if(mw>maxW){fs=fs*maxW/mw;cx.font=F(fs);}
+    cx.fillText(t.short,sg*R*.9,0);cx.restore();});
+  const L=28,on=Math.floor(performance.now()/(spinning?90:450))%2;
+  for(let i=0;i<L;i++){const a=i/L*Math.PI*2;cx.beginPath();cx.arc(c+Math.cos(a)*(R+5*dpr),c+Math.sin(a)*(R+5*dpr),4.2*dpr,0,Math.PI*2);cx.fillStyle=(i%2===on)?"#ffe46b":"#6b8f7b";cx.fill();}
+  cx.beginPath();cx.arc(c,c,R*.17,0,Math.PI*2);cx.fillStyle="#fff";cx.fill();cx.lineWidth=6*dpr;cx.strokeStyle="#173b2a";cx.stroke();
+  cx.fillStyle="#e2412f";cx.font=F(R*.1);cx.textAlign="center";cx.textBaseline="middle";cx.fillText("？",c,c);
+}
+function segAt(n){const w=Math.PI*2/n;let a=(Math.PI*1.5-rot)%(Math.PI*2);if(a<0)a+=Math.PI*2;return Math.floor(a/w)%n;}
+setInterval(()=>{if(!spinning)draw();},450);
+
+/* list */
+function render(){
+  const done=state.order.length,rem=remaining().length;
+  $("status").innerHTML=rem?`次は<span class="num">${done+1}つ目</span>のテーマ`:"🎉 すべてのテーマが決まりました！";
+  $("spinBtn").disabled=!rem||spinning;
+  $("remain").textContent=rem?`残り ${rem} テーマ`:"右の一覧から、各テーマの解説を開けます";
+  const L=$("list");L.innerHTML="";
+  THEMES.forEach(t=>{const idx=state.order.indexOf(t.no),done=idx>=0;
+    const el=document.createElement("div");el.className="ti "+(done?"done":"wait")+(done&&idx===state.order.length-1?" last":"");
+    el.innerHTML=`<div class="badge" style="background:${t.color}">${done?idx+1:"？"}</div><div class="tx"><b>${t.title}</b><small>${t.q}</small></div><button class="open" style="background:${t.color}">解説</button>`;
+    if(done){el.onclick=()=>{if(!spinning)openEx(t.no,0);};el.style.borderColor=t.color;}
+    L.appendChild(el);});
+  fitList();draw();
+}
+
+/* spin */
+async function spin(){
+  if(spinning||overlayOpen)return;const rem=remaining();if(!rem.length){showSum();return;}
+  audio();spinning=true;render();
+  const n=rem.length,w=Math.PI*2/n,ti=Math.floor(Math.random()*n),f=.15+Math.random()*.7;
+  const desired=Math.PI*1.5-(ti+f)*w,delta=((desired-rot)%(Math.PI*2)+Math.PI*2)%(Math.PI*2);
+  const start=rot,end=rot+(6+Math.floor(Math.random()*3))*Math.PI*2+delta,dur=5600+Math.random()*1200,t0=performance.now();let last=segAt(n);
+  await new Promise(res=>{function fr(now){const p=Math.min(1,(now-t0)/dur),e=1-Math.pow(1-p,4);rot=start+(end-start)*e;draw();const s=segAt(n);
+    if(s!==last){last=s;tick();const pt=$("pointer");pt.classList.remove("wig");void pt.offsetWidth;pt.classList.add("wig");}
+    if(p<1)requestAnimationFrame(fr);else res();}requestAnimationFrame(fr);});
+  rot=((rot%(Math.PI*2))+Math.PI*2)%(Math.PI*2);spinning=false;
+  const t=rem[ti];state.order.push(t.no);save();pending=t.no;
+  await sleep(450);reveal(t);
+}
+function reveal(t){
+  overlayOpen=true;$("ovLead").innerHTML=`<span class="gn">${state.order.length}つ目</span>のテーマは…`;
+  $("ovCard").innerHTML="";$("ovBtns").classList.add("hide");$("ov").classList.remove("hidden");beep(220,.5,"sawtooth",.05);
+  setTimeout(()=>{$("ovCard").innerHTML=`<div class="tcard"><div class="top" style="background:${t.color}"><div class="tt">${t.title}</div></div><div class="body"><div class="q">${t.q}</div></div></div>`;
+    fitTitle(document.querySelector("#ovCard .tt"));$("ovBtns").classList.remove("hide");fanfare();confetti(t.color);},1100);
+}
+function closeOv(){$("ov").classList.add("hidden");overlayOpen=false;pending=null;render();}
+$("ovClose").onclick=closeOv;
+$("toEx").onclick=()=>{const n=pending;closeOv();openEx(n,0);};
+
+/* explanation */
+function openEx(no,step){exTheme=themeBy(no);exStep=step;overlayOpen=true;$("ex").classList.remove("hidden");renderEx();}
+function closeEx(){$("ex").classList.add("hidden");overlayOpen=false;exTheme=null;render();}
+function renderEx(){
+  const t=exTheme,c=t.color,idx=state.order.indexOf(t.no);
+  $("ex").style.setProperty("--c",c);$("exHead").style.background=c;
+  $("exLbl").textContent=idx>=0?`${idx+1}つ目のテーマ｜解説`:"解説";$("exTitle").textContent=t.title;
+  $("tabs").innerHTML=TABS.map((b,i)=>`<button class="${i===exStep?"on":""}" data-i="${i}"><span style="${i===exStep?`background:${c}`:""}">${i+1}</span>${b.n}</button>`).join("");
+  $("tabs").querySelectorAll("button").forEach(b=>b.onclick=()=>{exStep=+b.dataset.i;renderEx();});
+  const k=TABS[exStep].k;let h="";
+  if(k==="lesson") h=`<div class="p-q" style="background:${c}1a">問い：${t.q}</div><ul class="ul">${t.lesson.map(x=>`<li>${x}</li>`).join("")}</ul><div class="note">出典：${PLAN}（単元計画・生成AI活用・本時の展開）</div>`;
+  if(k==="quotes") h=`<div class="qs">${t.quotes.map(q=>`<div class="qc"><div class="src">${q.src}</div><div class="txt">${q.text}</div></div>`).join("")}</div>`;
+  if(k==="points") h=`<ul class="ul">${t.points.map(x=>`<li>${x}</li>`).join("")}</ul>`;
+  if(k==="talk") h=`<div class="talk">${t.talk.map(x=>`<div>${x}</div>`).join("")}</div>`;
+  const p=$("panel");p.innerHTML='<div id="inner">'+h+'</div>';p.style.animation="none";void p.offsetWidth;p.style.animation="";p.scrollTop=0;
+  fitPanel();$("prevB").disabled=exStep===0;$("nextB").textContent=exStep===TABS.length-1?"ルーレットに戻る ▶":"次へ ▶";
+}
+$("prevB").onclick=()=>{if(exStep>0){exStep--;renderEx();}};
+$("nextB").onclick=()=>{if(exStep<TABS.length-1){exStep++;renderEx();}else closeEx();};
+$("exBack").onclick=closeEx;
+
+
+function fitPanel(){const p=$("panel"),inn=$("inner");if(!p||!inn)return;const cs=getComputedStyle(p);
+  const avail=p.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom);
+  let f=3.4;p.style.fontSize=f+"rem";while(inn.scrollHeight>avail&&f>1.3){f-=.1;p.style.fontSize=f+"rem";}}
+function fitTitle(el){if(!el)return;let f=4.4;el.style.fontSize=f+"rem";while(el.scrollWidth>el.clientWidth&&f>2){f-=.1;el.style.fontSize=f+"rem";}}
+window.addEventListener("resize",()=>{if(exTheme)fitPanel();});
+function fitList(){document.querySelectorAll(".ti .tx b").forEach(b=>{let f=2;b.style.fontSize=f+"rem";while(b.scrollWidth>b.clientWidth&&f>1.2){f-=.05;b.style.fontSize=f+"rem";}});}
+window.addEventListener("resize",fitList);
+/* summary */
+function showSum(){
+  const items=state.order.map((n,i)=>{const t=themeBy(n);return `<div class="it"><div class="n" style="background:${t.color}">${i+1}</div><b>${t.title}</b></div>`;}).join("")||"<p style='text-align:center;font-size:1.8rem'>まだ決まっていません</p>";
+  $("sumBox").innerHTML=`<h2>決まった順</h2>${items}<div class="foot"><button id="sumClose">閉じる</button></div>`;
+  $("sumOv").classList.remove("hidden");overlayOpen=true;$("sumClose").onclick=()=>{$("sumOv").classList.add("hidden");overlayOpen=false;};
+}
+
+/* confetti */
+const cc=$("confetti"),cctx=cc.getContext("2d");let parts=[],running=false;
+function confetti(main){cc.width=innerWidth;cc.height=innerHeight;const cols=[main,...THEMES.map(t=>t.color),"#ffe46b"];
+  for(let i=0;i<220;i++){const sd=i%2;parts.push({x:sd?cc.width*.05:cc.width*.95,y:cc.height*.75,vx:(sd?1:-1)*(4+Math.random()*10),vy:-(10+Math.random()*14),r:Math.random()*Math.PI,vr:(Math.random()-.5)*.4,s:6+Math.random()*9,c:cols[i%cols.length],life:0});}
+  if(!running){running=true;requestAnimationFrame(cstep);}}
+function cstep(){cctx.clearRect(0,0,cc.width,cc.height);parts.forEach(p=>{p.vy+=.35;p.vx*=.99;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;p.life++;cctx.save();cctx.translate(p.x,p.y);cctx.rotate(p.r);cctx.fillStyle=p.c;cctx.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);cctx.restore();});
+  parts=parts.filter(p=>p.y<cc.height+40&&p.life<400);if(parts.length)requestAnimationFrame(cstep);else{running=false;cctx.clearRect(0,0,cc.width,cc.height);}}
+
+/* controls */
+$("spinBtn").onclick=spin;
+$("soundBtn").onclick=()=>{opts.sound=!opts.sound;$("soundBtn").classList.toggle("on",opts.sound);$("soundBtn").textContent=opts.sound?"音あり":"音なし";};
+$("listBtn").onclick=()=>{if(!spinning&&!overlayOpen)showSum();};
+$("undoBtn").onclick=()=>{if(spinning||overlayOpen)return;state.order.pop();save();render();};
+let arm=null;$("resetBtn").onclick=()=>{if(spinning||overlayOpen)return;const b=$("resetBtn");
+  if(!arm){b.textContent="本当にリセット？";b.classList.add("warn");arm=setTimeout(()=>{arm=null;b.textContent="リセット";b.classList.remove("warn");},3000);return;}
+  clearTimeout(arm);arm=null;b.textContent="リセット";b.classList.remove("warn");state={order:[]};save();rot=0;render();};
+$("fsBtn").onclick=()=>{try{if(!document.fullscreenElement)document.documentElement.requestFullscreen().catch(()=>{});else document.exitFullscreen();}catch(e){}};
+document.addEventListener("keydown",e=>{
+  if(!$("ex").classList.contains("hidden")){
+    if(e.key==="ArrowRight"||e.code==="Space"){e.preventDefault();$("nextB").click();}
+    else if(e.key==="ArrowLeft"){e.preventDefault();$("prevB").click();}
+    else if(e.key==="Escape")closeEx();return;}
+  if(!$("sumOv").classList.contains("hidden")){if(e.code==="Space"||e.key==="Escape"){e.preventDefault();$("sumOv").classList.add("hidden");overlayOpen=false;}return;}
+  if(!$("ov").classList.contains("hidden")){if(!$("ovBtns").classList.contains("hide")){if(e.code==="Space"||e.key==="Enter"){e.preventDefault();$("toEx").click();}else if(e.key==="Escape")closeOv();}return;}
+  if(e.code==="Space"||e.key==="Enter"){e.preventDefault();spin();}
+});
+window.addEventListener("resize",sizeWheel);
+render();(document.fonts?document.fonts.ready:Promise.resolve()).then(sizeWheel);sizeWheel();
+</script>
+</body>
+</html>
